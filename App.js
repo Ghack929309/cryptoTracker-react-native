@@ -13,8 +13,8 @@ export default function App() {
             <CoinContext>
                 <View style={[styles.container,tw`pt-10`]}>
                     <StatusBar style="light"/>
-                    {/*<HomeScreen/>*/}
-                    <CoinDetail/>
+                    <HomeScreen/>
+                    {/*<CoinDetail/>*/}
                 </View>
             </CoinContext>
         </SafeAreaProvider>
@@ -24,6 +24,7 @@ export default function App() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#121212',
+        // backgroundColor: '#121212',
+        backgroundColor:'#040303'
     },
 });
