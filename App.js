@@ -1,30 +1,30 @@
 import {StatusBar} from 'expo-status-bar';
+import {NavigationContainer} from '@react-navigation/native';
 import {SafeAreaProvider} from 'react-native-safe-area-context'
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import CoinContext from "./src/context/CoinContext";
-import HomeScreen from "./src/screens/HomeScreen";
-import CoinDetail from "./src/screens/CoinDetail";
+import Navigation from "./src/navigation";
 import tw from "tailwind-react-native-classnames";
 
 
 export default function App() {
     return (
-        <SafeAreaProvider>
+        <NavigationContainer theme={{colors: {background: '#040303'}}}>
             <CoinContext>
-                <View style={[styles.container,tw`pt-10`]}>
+                <View style={[styles.container, tw`pt-10`]}>
+                    <Navigation/>
                     <StatusBar style="light"/>
-                    <HomeScreen/>
-                    {/*<CoinDetail/>*/}
                 </View>
             </CoinContext>
-        </SafeAreaProvider>
-    );
+        </NavigationContainer>
+    )
+        ;
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         // backgroundColor: '#121212',
-        backgroundColor:'#040303'
+        backgroundColor: '#040303'
     },
 });

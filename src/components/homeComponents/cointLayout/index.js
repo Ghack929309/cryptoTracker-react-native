@@ -1,14 +1,13 @@
-import {View, Text, Image, StyleSheet,TouchableOpacity} from "react-native";
+import {View, Text, Image, StyleSheet, Pressable} from "react-native";
 import tw from "tailwind-react-native-classnames";
 import {AntDesign} from '@expo/vector-icons';
 import {ChartDot, ChartPath, ChartPathProvider} from "@rainbow-me/animated-charts";
-import {useContext, useEffect} from "react";
-import {CoinProvider} from "../../context/CoinContext";
-
+import {useNavigation} from "@react-navigation/native";
 
 
 function CoinLayout({allData}) {
     const data = allData.coin
+    const navigation = useNavigation()
     const beautifyInteger = (number) => {
         const trillion = 1_000_000_000_000
         const billion = 1_000_000_000
@@ -24,14 +23,18 @@ function CoinLayout({allData}) {
     const icon = percentage ? 'caretdown' : "caretup"
     const SIZE = 75;
     const points = allData.price?.prices?.map(([x, y]) => ({x, y}))
-    const chartColor = data.price_change_percentage_24h > 0 ? '#16c784' : '#ea3943'
+    const chartColor = percentage ?  '#ea3943':'#16c784'
 
     return (
-        <TouchableOpacity style={[tw`flex-row justify-between`, {
-            padding: 15,
-            borderBottomWidth: StyleSheet.hairlineWidth,
-            borderBottomColor: '#282828'
-        }]}>
+        <Pressable onPress={() => navigation.navigate('CoinDetail', {
+            coinId: data.id
+        })}
+                   style={[tw`flex-row justify-between`, {
+                       padding: 15,
+                       borderBottomWidth: StyleSheet.hairlineWidth,
+                       borderBottomColor: '#282828'
+                   }]}>
+
             <ChartPathProvider data={{points, smoothingStrategy: 'bezier'}}>
                 {/*image*/}
                 <View style={tw`justify-center`}>
@@ -71,7 +74,7 @@ function CoinLayout({allData}) {
                         style={tw`text-white text-gray-500 tracking-tight text-xs`}>MCap {beautifyInteger(data.market_cap)}</Text>
                 </View>
             </ChartPathProvider>
-        </TouchableOpacity>
+        </Pressable>
     );
 }
 
