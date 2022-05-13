@@ -5,17 +5,20 @@ import {StyleSheet, View} from 'react-native';
 import CoinContext from "./src/context/CoinContext";
 import Navigation from "./src/navigation";
 import tw from "tailwind-react-native-classnames";
+import {RecoilRoot} from "recoil";
 
 
 export default function App() {
     return (
         <NavigationContainer theme={{colors: {background: '#040303'}}}>
-            <CoinContext>
-                <View style={[styles.container, tw`pt-10`]}>
-                    <Navigation/>
-                    <StatusBar style="light"/>
-                </View>
-            </CoinContext>
+            <RecoilRoot>
+                <CoinContext>
+                    <View style={[styles.container, tw`pt-10`]}>
+                        <Navigation/>
+                        <StatusBar style="light"/>
+                    </View>
+                </CoinContext>
+            </RecoilRoot>
         </NavigationContainer>
     )
         ;

@@ -1,12 +1,14 @@
-import React from 'react';
+import React, {Suspense} from 'react';
 import {Text, View} from "react-native";
 import PortfolioAssetsList from "../components/porfolioAssets";
 
-function Portfolio(props) {
+function Portfolio() {
     return (
-       <View>
-          <PortfolioAssetsList/>
-       </View>
+        <View>
+            <Suspense fallback={<Text style={{color: 'white'}}>Loading ...</Text>}>
+                <PortfolioAssetsList/>
+            </Suspense>
+        </View>
     );
 }
 

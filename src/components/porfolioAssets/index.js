@@ -4,12 +4,16 @@ import tw from "tailwind-react-native-classnames";
 import {AntDesign} from "@expo/vector-icons";
 import PortfolioAssetItem from "./PortfolioAssetItem";
 import {useNavigation} from "@react-navigation/native";
+import {useRecoilState,useRecoilValue} from "recoil";
+import {allPortfolioAssets} from "../../atoms/PortfolioAssets";
 
-function PortfolioAssetsList(props) {
+function PortfolioAssetsList() {
     const navigation = useNavigation()
+    const assets=useRecoilValue(allPortfolioAssets)
+    console.log(assets)
     return (
         <View>
-            <FlatList data={[{id:'bitcoin'}]}
+            <FlatList data={assets}
                       ListHeaderComponent={
                           <>
                               <View style={styles.balanceContainer}>
