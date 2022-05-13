@@ -19,11 +19,11 @@ function CoinLayout({allData}) {
         return `${Math.floor(number / thousand)} K`
     }
     const percentage = data.price_change_percentage_24h < 0
-    const color = percentage ? '#ea3943' : '#16c784'
-    const icon = percentage ? 'caretdown' : "caretup"
+    const color = percentage ? '#ea3943' : '#16c784'||'white'
+    const icon = percentage ? 'caretdown' : "caretup"||'caretup'
     const SIZE = 75;
     const points = allData.price?.prices?.map(([x, y]) => ({x, y}))
-    const chartColor = percentage ?  '#ea3943':'#16c784'
+    const chartColor = percentage ?  '#ea3943':'#16c784'||'white'
 
     return (
         <Pressable onPress={() => navigation.navigate('CoinDetail', {
@@ -51,7 +51,7 @@ function CoinLayout({allData}) {
                         </View>
                         <Text
                             style={[tw`font-bold uppercase text-white`, {marginHorizontal: 4}]}>{data.symbol}</Text>
-                        <AntDesign name={icon} style={{marginRight: 2}} size={12}
+                        <AntDesign name={icon} style={{marginRight: 2}} size={10}
                                    color={color}/>
                         <Text
                             style={{color: color}}>{data.price_change_percentage_24h.toFixed(2)}%</Text>

@@ -36,7 +36,7 @@ function CoinDetail() {
         setLoading(true)
         getDetailCoin(coinId.coinId).then((res) => {
             setCoinData(res)
-            setCurrencyValue(res.market_data.current_price.usd.toString())
+            setCurrencyValue(res.market_data?.current_price?.usd?.toString())
             fetchPrices(coinId.coinId, 1).then((res) => {
                 setPricesData(res)
             })
@@ -58,9 +58,9 @@ function CoinDetail() {
 
     const points = pricesData?.prices?.map(([x, y]) => ({x, y}))
     const percentage = price_change_percentage_24h < 0
-    const chartColor =percentage ? '#ea3943' : '#16c784'
-    const color = percentage ? '#ea3943' : '#16c784'
-    const icon = percentage ? 'caretdown' : "caretup"
+    const chartColor =percentage ? '#ea3943' : '#16c784'||'white'
+    const color = percentage ? '#ea3943' : '#16c784'||'white'
+    const icon = percentage ? 'caretdown' : "caretup"||'caretup'
 
     //show the graph info base on ui
     const formatUI = (value) => {
@@ -105,7 +105,7 @@ function CoinDetail() {
                 <View style={[tw`text-white flex-row rounded-xl items-center`, {
                     padding: 8, backgroundColor: color
                 }]}>
-                    <AntDesign name={icon} style={{marginRight: 4}} size={12}
+                    <AntDesign name={icon} style={{marginRight: 4}} size={10}
                                color={'white'}/>
                     <Text
                         style={[tw`text-white`, {

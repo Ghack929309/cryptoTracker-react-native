@@ -1,16 +1,29 @@
-import { createStackNavigator } from '@react-navigation/stack';
-import HomeScreen from "../screens/HomeScreen";
+import {createStackNavigator} from '@react-navigation/stack';
 import CoinDetail from "../screens/CoinDetail";
 import BottomTabNavigator from "./BottomTabNavigator";
+import NewAssets from "../screens/NewAssets";
 
-const Stack= createStackNavigator()
+const Stack = createStackNavigator()
 
-const Navigation =()=>{
-   return(
-       <Stack.Navigator initialRouteName="Root" screenOptions={{headerShown:false}}>
-           <Stack.Screen name='Root' component={BottomTabNavigator} />
-           <Stack.Screen name='CoinDetail' component={CoinDetail}/>
-       </Stack.Navigator>
-   )
+const Navigation = () => {
+    return (
+        <Stack.Navigator initialRouteName="Root">
+            <Stack.Screen name='Root' component={BottomTabNavigator}
+                          options={{headerShown: false}}/>
+            <Stack.Screen name='CoinDetail' component={CoinDetail}
+                          options={{headerShown: false}}/>
+            <Stack.Screen name="AddNewAsset" component={NewAssets} options={{
+                title:'Add New Asset',
+                headerBackTitle:'Back',
+                headerStyle:{
+                    backgroundColor:'#040303'
+                },
+                headerTintColor:'white',
+                headerTitleStyle:{
+                    fontWeight:'bold'
+                }
+            }}/>
+        </Stack.Navigator>
+    )
 }
 export default Navigation
