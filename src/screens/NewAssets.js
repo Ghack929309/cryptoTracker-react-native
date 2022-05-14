@@ -1,54 +1,123 @@
-import React, {useState} from 'react';
-import {Text, TextInput, View, StyleSheet, Pressable} from "react-native";
+import React, {useContext, useEffect, useState} from 'react';
+import {Text, TextInput, View, StyleSheet, Pressable,ActivityIndicator} from "react-native";
 import SearchableDropDown from "react-native-searchable-dropdown";
 import tw from "tailwind-react-native-classnames";
 import {useNavigation} from "@react-navigation/native";
 import {FontAwesome} from "@expo/vector-icons";
+import {useRecoilState} from "recoil";
+import {boughtAssetsFromLocal} from "../atoms/PortfolioAssets";
+import {CoinProvider} from "../context/CoinContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 function NewAssets() {
     const navigation = useNavigation()
+    const {fetchAllCoin, getDetailCoin} = useContext(CoinProvider);
+    const [loading, setLoading] = useState(false)
+    const [assetInfo, setAssetInfo] = useState(null)
+    const [allCoin, setAllCoin] = useState([])
+    const [selectedCoin, setSelectedCoin] = useState('')
+    const [assetsInLocal, setAssetsInLocal] = useRecoilState(boughtAssetsFromLocal)
     const [assetQuantity, setAssetQuantity] = useState('')
+    const emptyInput = assetQuantity === ''
+    //fetch data need on component mounted
+    useEffect(() => {
+        getData()
+    }, [])
+
+    useEffect(()=>{
+        if(selectedCoin){
+            getAssetInfo(selectedCoin)
+        }
+    },[selectedCoin])
+//all functions are here
+    const onAddNewAsset = async () => {
+        const {id,name,image:{small},symbol,market_data:{current_price:{usd}}}=assetInfo
+        const newAssets={
+            id:id,
+            name:name,
+            image:small,
+            ticker:symbol.toUpperCase(),
+            quantityBought:assetQuantity,
+            priceBought:usd
+        }
+        const shouldStore=assetsInLocal.find(coin=> coin.id === newAssets.id)
+        const storage=[...assetsInLocal,newAssets]
+       await AsyncStorage.setItem('@portfolio-coins',JSON.stringify(storage))
+        setAssetsInLocal(storage)
+        navigation.goBack()
+    }
+
+    const getData = async () => {
+        if (loading) return;
+        setLoading(true)
+        const data = await fetchAllCoin()
+        setAllCoin(data)
+        setLoading(false)
+    }
+    const getAssetInfo = (id) => {
+        getDetailCoin(id).then(res => {
+            setAssetInfo(res)
+        })
+    }
+
     return (
         <View style={tw`flex-1`}>
             <SearchableDropDown
-                items={[]}
-                onItemSelect={({item}) => console.log(item)}
+                items={allCoin}
+                onItemSelect={(item) => setSelectedCoin(item.id)}
                 containerStyle={styles.container}
                 itemStyle={styles.item}
                 itemTextStyle={{color: 'white'}}
                 resetValue={false}
-                placeholder={"Select a coin..."}
+                placeholder={selectedCoin || "Select a coin..."}
                 placeholderTextColor='white'
                 textInputProps={{
                     underlineColorAndroid: 'transparent',
                     style: styles.inputProps
                 }}
             />
-            <View style={[tw`flex-row items-start flex-1`, {marginTop: 50}]}>
-                <View
-                    style={[tw`flex-col items-end justify-center`, {width: '70%'}]}>
-                    <View style={tw`flex-row`}>
-                        <TextInput value={assetQuantity}
-                                   style={{color: 'white', fontSize: 90}}
-                                   placeholder='0'
-                                   keyboardType='numeric'
-                                   onChangeText={(text) => setAssetQuantity(text)}/>
-                        <Text style={styles.coinName}>BTC</Text>
+            {assetInfo && !loading && (
+                <>
+                    <View style={[tw`flex-row items-start flex-1`, {marginTop: 50}]}>
+                        <View
+                            style={[tw`flex-col items-end justify-center`, {width: '70%'}]}>
+                            <View style={tw`flex-row`}>
+                                <TextInput value={assetQuantity}
+                                           style={{color: 'white', fontSize: 90}}
+                                           placeholder='0'
+                                           keyboardType='numeric'
+                                           onChangeText={(text) => setAssetQuantity(text)}/>
+                                <Text style={styles.coinName}>{assetInfo?.symbol?.toUpperCase()}</Text>
+                            </View>
+                            <Text style={styles.perCoin}>${assetInfo?.market_data?.current_price?.usd} per coin</Text>
+                        </View>
+                        <View style={tw`self-start mt-10 items-center flex-1`}>
+                            <View style={tw`pl-4 items-center`}>
+                                <FontAwesome name="exchange"
+                                             style={{transform: [{rotate: '90deg'}]}}
+                                             size={25}
+                                             color="#444444"/>
+                                <Text
+                                    style={[tw`font-semibold mt-2`, {color: '#535252'}]}>USD</Text>
+                            </View>
+                        </View>
                     </View>
-                    <Text style={styles.perCoin}>$30000 per coin</Text>
-                </View>
-                <View style={tw`self-start mt-10 items-center flex-1`}>
-                    <View style={tw`pl-4 items-center`}>
-                        <FontAwesome name="exchange" style={{transform: [{ rotate: '90deg'}]}} size={25} color="#444444"/>
-                        <Text style={[tw`font-semibold mt-2`,{color:'#535252'}]}>USD</Text>
-                    </View>
-                </View>
-            </View>
-            <Pressable onPress={() => navigation.navigate('AddNewAsset')}
-                       style={styles.bottomContainer}>
-                <Text style={styles.bottomText}>Add new Assets</Text>
-            </Pressable>
+                    <Pressable onPress={onAddNewAsset}
+                               disabled={emptyInput}
+                               style={{
+                                   ...styles.bottomContainer,
+                                   backgroundColor:
+                                       emptyInput ? '#303030' : '#4961E1'
+                               }}>
+                        <Text style={{
+                            ...styles.bottomText,
+                            color: emptyInput ? 'gray' : 'white'
+                        }}>Add new Assets</Text>
+                    </Pressable>
+                </>
+            )}
+
         </View>
     );
 }
@@ -83,7 +152,6 @@ const styles = StyleSheet.create({
         marginLeft: 5
     },
     bottomContainer: {
-        backgroundColor: '#4961E1',
         padding: 10,
         alignItems: 'center',
         marginVertical: 30,
@@ -91,15 +159,14 @@ const styles = StyleSheet.create({
         borderRadius: 5
     },
     bottomText: {
-        color: 'white',
         fontSize: 17,
         fontWeight: '600'
     },
-    perCoin:{
-        color:'#535252',
-        fontSize:19,
-        fontWeight:'500',
-        letterSpacing:.5
+    perCoin: {
+        color: '#535252',
+        fontSize: 19,
+        fontWeight: '500',
+        letterSpacing: .5
     }
 })
 

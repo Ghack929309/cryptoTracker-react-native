@@ -4,7 +4,7 @@ import PortfolioAssetsList from "../components/porfolioAssets";
 
 function Portfolio() {
     return (
-        <View>
+        <View style={{flex:1}}>
             <Suspense fallback={<Text style={{color: 'white'}}>Loading ...</Text>}>
                 <PortfolioAssetsList/>
             </Suspense>

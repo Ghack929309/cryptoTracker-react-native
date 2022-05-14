@@ -1,7 +1,6 @@
 import {atom, selector} from "recoil";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {useContext} from "react";
-import {CoinProvider} from "../context/CoinContext";
+import { fetchWatchlistData} from "../context/CoinContext";
 
 export const portfolioBoughtAssets = selector({
     key: 'portfolioBoughtAssets',
@@ -15,7 +14,6 @@ export const portfolioBoughtAssets = selector({
 export const boughtAssetsFromAPI = selector({
     key: "boughtAssetsFromAPI",
     get: async ({get}) => {
-        const {fetchWatchlistData} = useContext(CoinProvider)
         const subscribeToLocalAssets = get(boughtAssetsFromLocal)
         const ids = subscribeToLocalAssets.map(coin => coin.id).join()
         const portfolioAssets = await fetchWatchlistData(ids)
@@ -24,7 +22,7 @@ export const boughtAssetsFromAPI = selector({
             return {
                 ...asset,
                 currentPrice: apiAssets.current_price,
-                priceChangePercentage: apiAssets.price_change_percentage_24
+                priceChangePercentage: apiAssets.price_change_percentage_24h
             }
         })
         return assets.sort((item1, item2) =>{

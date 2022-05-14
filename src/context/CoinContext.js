@@ -4,6 +4,34 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const CoinProvider = createContext(null)
 
+// fetching current data for watch list
+export function fetchWatchlistData(ids,page=1){
+    const config={
+        method:'get',
+        url:'https://api.coingecko.com/api/v3/coins/markets',
+        params: {
+            vs_currency: 'usd',
+            ids:ids,
+            order: 'market_cap_desc',
+            page: page,
+            sparkline: false,
+            price_change_percentage: '24h'
+        },
+        headers: {
+            'accept': 'application/json'
+        }
+    }
+
+    return new Promise((resolve,reject)=>{
+        axios(config).then(response=>{
+            return resolve(response.data)
+        }).catch(e=> {
+            reject(e)
+            console.log(e)
+        })
+    })
+}
+
 function CoinContext({children}) {
     const [priceData, setPriceData] = useState([])
     const [loading, setLoading] = useState(false)
@@ -84,12 +112,13 @@ function CoinContext({children}) {
 
     //fetching prices for each coin
     function fetchPrices(coin, days) {
-
         const config = {
             method: 'get',
             url: `https://api.coingecko.com/api/v3/coins/${coin}/market_chart`,
             params: {
-                vs_currency: 'usd', days: days, interval: 'hourly'
+                vs_currency: 'usd',
+                days: days,
+                interval: 'hourly'
             },
             headers: {
                 'accept': 'application/json'
@@ -163,32 +192,16 @@ function CoinContext({children}) {
             console.log(e)
         }
     }
-    // fetching current data for watch list
-    const fetchWatchlistData=(ids,page=1)=>{
-        const config={
-            method:'get',
-            url:'https://api.coingecko.com/api/v3/coins/markets',
-            params: {
-                vs_currency: 'usd',
-                ids:ids,
-                order: 'market_cap_desc',
-                page: page,
-                sparkline: false,
-                price_change_percentage: '24h'
-            },
-            headers: {
-                'accept': 'application/json'
-            }
-        }
 
-            return new Promise((resolve,reject)=>{
-                axios(config).then(response=>{
-                   return resolve(response.data)
-                }).catch(e=> {
-                    reject(e)
-                    console.log(e)
-                })
-            })
+    // get simple coin for portfolio
+    const fetchAllCoin=async ()=>{
+
+        try{
+            const response=await axios.get('https://api.coingecko.com/api/v3/coins/list?include_platform=false')
+            return response.data
+        }catch (error) {
+            console.log(error)
+        }
 
     }
     return (
@@ -204,6 +217,7 @@ function CoinContext({children}) {
                 storeCoinIdToLocal,
                 removeCoinFromLocal,
                 fetchWatchlistData,
+                fetchAllCoin
             }}>
             {children}
         </CoinProvider.Provider>);

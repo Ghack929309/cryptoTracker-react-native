@@ -10,9 +10,17 @@ import {allPortfolioAssets} from "../../atoms/PortfolioAssets";
 function PortfolioAssetsList() {
     const navigation = useNavigation()
     const assets=useRecoilValue(allPortfolioAssets)
-    console.log(assets)
+    const currentBalance=assets.reduce((total,price)=>{
+        return total + (price.currentPrice*price.quantityBought)
+    },0)
+    const boughtValue= assets.reduce((total,price)=>{
+        return total+ (price.priceBought * price.quantityBought)
+    },0)
+    const percentageValue= ((currentBalance-boughtValue)/boughtValue)*100||0
+    const color = percentageValue < 0 ? '#ea3943' : '#16c784' || 'white'
+    const icon = percentageValue < 0 ? 'caretdown' : "caretup" || 'caretup'
     return (
-        <View>
+
             <FlatList data={assets}
                       ListHeaderComponent={
                           <>
@@ -21,17 +29,16 @@ function PortfolioAssetsList() {
                                       <Text style={[styles.text, {fontSize: 16}]}>Current
                                           Price</Text>
                                       <Text
-                                          style={[styles.text, styles.currentBalance]}>$2000</Text>
-                                      <Text style={[styles.text, styles.valueChange]}>1000
-                                          (All
-                                          time)</Text>
+                                          style={[styles.text, styles.currentBalance]}>{currentBalance.toFixed(2)}</Text>
+                                      <Text style={{...styles.valueChange,marginTop:4,color:boughtValue-currentBalance>0?'#16c784':'#ea3943'}}>{(boughtValue-currentBalance).toFixed(2) }
+                                          US$ (24h)</Text>
                                   </View>
-                                  <View style={[styles.pricePercentage]}>
-                                      <AntDesign name='caretup' style={{marginRight: 2}}
+                                  <View style={{...styles.pricePercentage,backgroundColor:color}}>
+                                      <AntDesign name={icon} style={{marginRight: 2}}
                                                  size={10}
-                                                 color="white"/>
+                                                 color='white'/>
                                       <Text
-                                          style={[styles.text, styles.percentage]}>1,2%</Text>
+                                          style={[styles.text, styles.percentage]}>{percentageValue.toFixed(2)}%</Text>
                                   </View>
                               </View>
                               <View style={styles.assetContainer}>
@@ -46,7 +53,7 @@ function PortfolioAssetsList() {
                           </Pressable>
                       }
             />
-        </View>
+
     );
 }
 
@@ -82,7 +89,6 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         paddingVertical: 3,
         paddingHorizontal: 8,
-        backgroundColor: '#16c784',
         borderRadius: 5
     },
     assetsText: {
