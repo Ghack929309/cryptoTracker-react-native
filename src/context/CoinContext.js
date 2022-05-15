@@ -5,13 +5,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export const CoinProvider = createContext(null)
 
 // fetching current data for watch list
-export function fetchWatchlistData(ids,page=1){
-    const config={
-        method:'get',
-        url:'https://api.coingecko.com/api/v3/coins/markets',
+export function fetchWatchlistData(ids, page = 1) {
+    const config = {
+        method: 'get',
+        url: 'https://api.coingecko.com/api/v3/coins/markets',
         params: {
             vs_currency: 'usd',
-            ids:ids,
+            ids: ids,
             order: 'market_cap_desc',
             page: page,
             sparkline: false,
@@ -22,8 +22,8 @@ export function fetchWatchlistData(ids,page=1){
         }
     }
 
-    return new Promise((resolve,reject)=>{
-        axios(config).then(response=>{
+    return new Promise((resolve, reject) => {
+        axios(config).then(response => {
             return resolve(response.data)
         }).catch(e=> {
             reject(e)
@@ -38,8 +38,8 @@ function CoinContext({children}) {
     const [watchlist, setWatchlist] = useState([])
 
 
-
     useEffect(() => {
+        // AsyncStorage.clear()
         dataWithPrice()
         getDataFromLocal()
 
@@ -58,8 +58,8 @@ function CoinContext({children}) {
     //storing data to local storage
     const storeCoinIdToLocal = async (coinId) => {
         try {
-            const exist=watchlist?.some(id=>coinId===id)
-            if(!exist){
+            const exist = watchlist?.some(id => coinId === id)
+            if (!exist) {
                 const add = [...watchlist, coinId]
                 await AsyncStorage.setItem('@watchlist', JSON.stringify(add))
                 setWatchlist(add)
@@ -70,9 +70,9 @@ function CoinContext({children}) {
         }
     }
     //remove coin from local storage
-    const removeCoinFromLocal=async (coinId)=>{
-        const removeId=watchlist.filter(id=>id!==coinId)
-        await AsyncStorage.setItem('@watchlist',JSON.stringify(removeId))
+    const removeCoinFromLocal = async (coinId) => {
+        const removeId = watchlist.filter(id => id !== coinId)
+        await AsyncStorage.setItem('@watchlist', JSON.stringify(removeId))
         setWatchlist(removeId)
     }
 
@@ -152,16 +152,16 @@ function CoinContext({children}) {
                 setPriceData(prev => [...prev, {coin, price}])
                 setLoading(false)
             })
-        } catch (e) {
-            console.log(e)
+        } catch (error) {
+                console.log(error)
         }
     }
     //on refreshing the screen
     const onRefreshScreen = async () => {
 
         setLoading(true)
-        // setPriceData([])
         try {
+            setPriceData([])
             fetchData().then(res => {
                 let value = []
                 res.map(coin => {
@@ -194,10 +194,10 @@ function CoinContext({children}) {
     }
 
     // get simple coin for portfolio
-    const fetchAllCoin=async ()=>{
+    const fetchAllCoin = async () => {
 
-        try{
-            const response=await axios.get('https://api.coingecko.com/api/v3/coins/list?include_platform=false')
+        try {
+            const response = await axios.get('https://api.coingecko.com/api/v3/coins/list?include_platform=false')
             return response.data
         }catch (error) {
             console.log(error)

@@ -31,8 +31,8 @@ function PortfolioAssetItem({item}) {
                 <Text style={[tw`text-white font-bold`, {fontSize: 16}]}>{name}</Text>
                 <Text style={tw`text-gray-400 `}>{ticker}</Text>
             </View>
-            <View style={{marginLeft: 'auto',alignItems:'flex-end'}}>
-                <Text style={[tw`text-white`, {fontWeight: '600'}]}>${currentPrice.toFixed(2)}</Text>
+            <View style={{marginLeft:'auto',alignItems:'flex-end'}}>
+                <Text style={[tw`text-white`, {fontWeight: '600'}]}>${currentPrice?.toFixed(2)}</Text>
                 <View style={tw`flex-row justify-end items-center`}>
                     <AntDesign name={icon}
                                style={{marginRight: 5, alignSelf: 'center'}}
@@ -41,12 +41,12 @@ function PortfolioAssetItem({item}) {
                     <Text style={{
                         color: color,
                         fontWeight: '600',
-                    }}>{priceChangePercentage.toFixed(2)}</Text>
+                    }}>{priceChangePercentage?.toFixed(2)}</Text>
                 </View>
             </View>
             <View style={{marginLeft: 'auto', alignItems: 'flex-end'}}>
                 <Text
-                    style={[tw`text-white font-bold`, {fontSize: 16}]}>${(quantityBought * currentPrice).toFixed(2)}</Text>
+                    style={[tw`text-white font-bold`, {fontSize: 16}]}>${(quantityBought * currentPrice)?.toFixed(2)}</Text>
                 <Text style={{
                     fontWeight: '600',
                     color: 'white'

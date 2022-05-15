@@ -1,3 +1,4 @@
+import {memo} from 'react'
 import {View, Text, Image, StyleSheet, Pressable} from "react-native";
 import tw from "tailwind-react-native-classnames";
 import {AntDesign} from '@expo/vector-icons';
@@ -9,14 +10,14 @@ function CoinLayout({allData}) {
     const data = allData.coin
     const navigation = useNavigation()
     const beautifyInteger = (number) => {
-        const trillion = 1_000_000_000_000
-        const billion = 1_000_000_000
-        const million = 1_000_000
-        const thousand = 1_000
-        if (number >= trillion) return `${Math.floor(number / trillion)} T`
-        else if (number >= billion) return `${Math.floor(number / billion)} B`;
-        else if (number >= million) return `${Math.floor(number / million)} M`;
-        return `${Math.floor(number / thousand)} K`
+        const trillion = 1e12
+        const billion = 1e9
+        const million = 1e6
+        const thousand = 1e3
+        if (number >= trillion) return `${(number / trillion).toFixed(3)} Tn`
+        else if (number >= billion) return `${(number / billion).toFixed(3)} Bn`;
+        else if (number >= million) return `${(number / million).toFixed(3)} Mn`;
+        return `${(number / thousand).toFixed(3)} K`
     }
     const percentage = data.price_change_percentage_24h < 0
     const color = percentage ? '#ea3943' : '#16c784'||'white'

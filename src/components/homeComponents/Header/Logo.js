@@ -22,7 +22,13 @@ function Logo({search, setSearch, setInput, input}) {
                 ) : (
                     <View style={tw`flex-row justify-between p-4`}>
                         <Text
-                            style={tw`text-white font-bold text-xl`}>CryptoTracker</Text>
+                            style={{
+                                color: 'white',
+                                fontSize: 22,
+                                letterSpacing: 1,
+                                paddingHorizontal: 20,
+                                fontFamily:'Inter_900Black'
+                            }}>CryptoTracker</Text>
                         <TouchableOpacity onPress={() => setSearch(!search)}>
                             <Ionicons name="md-search-outline" size={25} color="white"/>
                         </TouchableOpacity>

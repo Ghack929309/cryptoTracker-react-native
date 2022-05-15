@@ -1,14 +1,22 @@
 import {StatusBar} from 'expo-status-bar';
 import {NavigationContainer} from '@react-navigation/native';
-import {SafeAreaProvider} from 'react-native-safe-area-context'
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, View,ActivityIndicator} from 'react-native';
 import CoinContext from "./src/context/CoinContext";
 import Navigation from "./src/navigation";
 import tw from "tailwind-react-native-classnames";
 import {RecoilRoot} from "recoil";
+import { useFonts, Inter_900Black } from '@expo-google-fonts/inter';
+
 
 
 export default function App() {
+    let [fontsLoaded] = useFonts({
+        Inter_900Black,
+    });
+
+    if (!fontsLoaded) {
+        return <ActivityIndicator size='large' />;
+    }
     return (
         <NavigationContainer theme={{colors: {background: '#040303'}}}>
             <RecoilRoot>
@@ -27,7 +35,6 @@ export default function App() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        // backgroundColor: '#121212',
         backgroundColor: '#040303'
     },
 });

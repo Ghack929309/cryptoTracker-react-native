@@ -1,11 +1,18 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Text, TextInput, View, StyleSheet, Pressable,ActivityIndicator} from "react-native";
+import {
+    Text,
+    TextInput,
+    View,
+    StyleSheet,
+    Pressable,
+    ActivityIndicator
+} from "react-native";
 import SearchableDropDown from "react-native-searchable-dropdown";
 import tw from "tailwind-react-native-classnames";
 import {useNavigation} from "@react-navigation/native";
 import {FontAwesome} from "@expo/vector-icons";
 import {useRecoilState} from "recoil";
-import {boughtAssetsFromLocal} from "../atoms/PortfolioAssets";
+import {boughtAssetsFromLocalState} from "../atoms/PortfolioAssets";
 import {CoinProvider} from "../context/CoinContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -17,7 +24,7 @@ function NewAssets() {
     const [assetInfo, setAssetInfo] = useState(null)
     const [allCoin, setAllCoin] = useState([])
     const [selectedCoin, setSelectedCoin] = useState('')
-    const [assetsInLocal, setAssetsInLocal] = useRecoilState(boughtAssetsFromLocal)
+    const [assetsInLocal, setAssetsInLocal] = useRecoilState(boughtAssetsFromLocalState)
     const [assetQuantity, setAssetQuantity] = useState('')
     const emptyInput = assetQuantity === ''
     //fetch data need on component mounted
@@ -25,27 +32,34 @@ function NewAssets() {
         getData()
     }, [])
 
-    useEffect(()=>{
-        if(selectedCoin){
+    useEffect(() => {
+        if (selectedCoin) {
             getAssetInfo(selectedCoin)
         }
-    },[selectedCoin])
+    }, [selectedCoin])
 //all functions are here
     const onAddNewAsset = async () => {
-        const {id,name,image:{small},symbol,market_data:{current_price:{usd}}}=assetInfo
-        const newAssets={
-            id:id,
-            name:name,
-            image:small,
-            ticker:symbol.toUpperCase(),
-            quantityBought:assetQuantity,
-            priceBought:usd
+        const {
+            id,
+            name,
+            image: {small},
+            symbol,
+            market_data: {current_price: {usd}}
+        } = assetInfo
+        const newAssets = {
+            id: id,
+            name: name,
+            image: small,
+            ticker: symbol.toUpperCase(),
+            quantityBought: assetQuantity,
+            priceBought: usd
         }
-        const shouldStore=assetsInLocal.find(coin=> coin.id === newAssets.id)
-        const storage=[...assetsInLocal,newAssets]
-       await AsyncStorage.setItem('@portfolio-coins',JSON.stringify(storage))
-        setAssetsInLocal(storage)
-        navigation.goBack()
+        const shouldStore = assetsInLocal.find(coin => coin.id === newAssets.id)
+        console.log(shouldStore)
+            const storage = [...assetsInLocal, newAssets]
+            await AsyncStorage.setItem('@portfolio-coins', JSON.stringify(storage))
+            setAssetsInLocal(storage)
+            navigation.goBack()
     }
 
     const getData = async () => {
@@ -88,9 +102,12 @@ function NewAssets() {
                                            placeholder='0'
                                            keyboardType='numeric'
                                            onChangeText={(text) => setAssetQuantity(text)}/>
-                                <Text style={styles.coinName}>{assetInfo?.symbol?.toUpperCase()}</Text>
+                                <Text
+                                    style={styles.coinName}>{assetInfo?.symbol?.toUpperCase()}</Text>
                             </View>
-                            <Text style={styles.perCoin}>${assetInfo?.market_data?.current_price?.usd} per coin</Text>
+                            <Text
+                                style={styles.perCoin}>${assetInfo?.market_data?.current_price?.usd} per
+                                coin</Text>
                         </View>
                         <View style={tw`self-start mt-10 items-center flex-1`}>
                             <View style={tw`pl-4 items-center`}>

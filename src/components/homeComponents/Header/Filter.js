@@ -20,11 +20,11 @@ function Filter() {
                     style={tw`text-white font-semibold tracking-tight text-sm`}>My
                     Watchlist</Text>
             </Pressable>
-            <View
+            <Pressable
                 style={[tw`justify-center items-center bg-gray-800  rounded-xl`, styles.filterCenter]}>
                 <Text
                     style={tw`text-white font-semibold tracking-tight text-sm`}>USD</Text>
-            </View>
+            </Pressable>
             <View
                 style={[tw`justify-center items-center bg-gray-800  rounded-xl`, styles.filterCenter]}>
                 <Text
