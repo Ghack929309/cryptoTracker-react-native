@@ -40,7 +40,6 @@ export const chartDataFetchState = selector({
         const intervalState = get(charIntervalState)
         const {coin,interval}=intervalState
         //fetching prices for each coin
-
             const fetchPrices= async () => {
                 const config = {
                     method: 'get',

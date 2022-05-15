@@ -5,7 +5,8 @@ import {
     View,
     StyleSheet,
     Pressable,
-    ActivityIndicator
+    KeyboardAvoidingView,
+    Platform
 } from "react-native";
 import SearchableDropDown from "react-native-searchable-dropdown";
 import tw from "tailwind-react-native-classnames";
@@ -15,6 +16,7 @@ import {useRecoilState} from "recoil";
 import {boughtAssetsFromLocalState} from "../atoms/PortfolioAssets";
 import {CoinProvider} from "../context/CoinContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import uuid from 'react-native-uuid';
 
 
 function NewAssets() {
@@ -47,17 +49,18 @@ function NewAssets() {
             market_data: {current_price: {usd}}
         } = assetInfo
         const newAssets = {
-            id: id,
-            name: name,
+            id,
+            key: uuid.v4(),
+            name,
             image: small,
             ticker: symbol.toUpperCase(),
             quantityBought: assetQuantity,
             priceBought: usd
         }
-            const storage = [...assetsInLocal, newAssets]
-            await AsyncStorage.setItem('@portfolio-coins', JSON.stringify(storage))
-            setAssetsInLocal(storage)
-            navigation.goBack()
+        const storage = [...assetsInLocal, newAssets]
+        await AsyncStorage.setItem('@portfolio-coins', JSON.stringify(storage))
+        setAssetsInLocal(storage)
+        navigation.goBack()
     }
 
     const getData = async () => {
@@ -74,7 +77,8 @@ function NewAssets() {
     }
 
     return (
-        <View style={tw`flex-1`}>
+        <KeyboardAvoidingView style={tw`flex-1`} keyboardVerticalOffset={80}
+                              behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
             <SearchableDropDown
                 items={allCoin}
                 onItemSelect={(item) => setSelectedCoin(item.id)}
@@ -133,7 +137,7 @@ function NewAssets() {
                 </>
             )}
 
-        </View>
+        </KeyboardAvoidingView>
     );
 }
 

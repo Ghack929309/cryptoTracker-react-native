@@ -17,7 +17,7 @@ function PortfolioAssetItem({item}) {
     const color = priceChangePercentage < 0 ? '#ea3943' : '#16c784' || 'white'
     const icon = priceChangePercentage < 0 ? 'caretdown' : "caretup" || 'caretup'
     return (
-        <View style={[tw`flex-row justify-center items-center`, {padding: 10}]}>
+        <View style={[tw`flex-row justify-center items-center bg-black`, {padding: 10}]}>
             <View>
                 <Image source={{uri: image}}
                        style={{

@@ -39,6 +39,7 @@ function CoinContext({children}) {
     const [watchlist, setWatchlist] = useState([])
 
     useEffect(() => {
+        // AsyncStorage.clear()
         dataWithPrice()
         getDataFromLocal()
 
