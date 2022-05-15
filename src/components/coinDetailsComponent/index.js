@@ -41,8 +41,8 @@ function SplitCoinDetails() {
             setLoading(false)
         }).catch((error) => console.log(error))
     }, [])
-    console.log('rerender')
     //fetch prices
+    //TODO IMPLEMENT SKELETON ON FILTER PRICES DATA
     useEffect(() => {
         setInterval({coin: coinId.coinId, interval: 1})
     }, [])

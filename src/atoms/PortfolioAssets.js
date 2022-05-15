@@ -3,6 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import {fetchWatchlistData} from "../context/CoinContext";
 import axios from "axios";
 
+// fetching coin list form local storage
 export const portfolioBoughtAssetsState = selector({
     key: 'portfolioBoughtAssetsState',
     get: async () => {
@@ -12,6 +13,7 @@ export const portfolioBoughtAssetsState = selector({
 
 })
 
+// selector update the coin list on local storage with new data
 export const boughtAssetsFromAPIState = selector({
     key: "boughtAssetsFromAPIState",
     get: async ({get}) => {
@@ -32,25 +34,6 @@ export const boughtAssetsFromAPIState = selector({
     }
 })
 
-export const refreshAssetsFromAPIState = selector({
-    key: "refreshAssetsFromAPIState",
-    get: async ({get}) => {
-        const dataFromApi = await get(allPortfolioAssetsState);
-        const ids = dataFromApi.map(coin => coin.id).join()
-        const portfolioAssets = await fetchWatchlistData(ids)
-        const newData = dataFromApi.map(coin => {
-            const apiAssets = portfolioAssets.filter(item => coin.id === item.id)
-            return apiAssets.map(value => ({
-                ...coin,
-                currentPrice: value.current_price,
-                priceChangePercentage: value.price_change_percentage_24h
-            }))
-        })
-        return newData.sort((item1, item2) => {
-            return (item1.currentPrice * item1.quantityBought) < (item2.currentPrice * item2.quantityBought)
-        })
-    }
-})
 export const chartDataFetchState = selector({
     key: 'chartDataFetchState',
     get: async ({get}) => {
@@ -82,26 +65,23 @@ export const chartDataFetchState = selector({
             return fetchPrices()
     }
 })
-
+// chart state
 export const charIntervalState = atom({
     key: 'charIntervalState',
     default: {coin:'',interval:1}
 })
+//storing information after fetching base on chart state
 export const chartPricesState=atom({
     key:'chartPricesState',
     default:chartDataFetchState
 })
 
-export const allRefreshDataFromAPIState = atom({
-    key: 'allRefreshDataFromAPIState',
-    default: refreshAssetsFromAPIState
-})
-
+// store of updated data from the local storage
 export const allPortfolioAssetsState = atom({
     key: 'allPortfolioAssetsState',
     default: boughtAssetsFromAPIState
 })
-
+// store of data from the local storage
 export const boughtAssetsFromLocalState = atom({
     key: 'boughtAssetsFromLocalState',
     default: portfolioBoughtAssetsState

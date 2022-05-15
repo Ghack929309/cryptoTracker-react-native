@@ -54,8 +54,6 @@ function NewAssets() {
             quantityBought: assetQuantity,
             priceBought: usd
         }
-        const shouldStore = assetsInLocal.find(coin => coin.id === newAssets.id)
-        console.log(shouldStore)
             const storage = [...assetsInLocal, newAssets]
             await AsyncStorage.setItem('@portfolio-coins', JSON.stringify(storage))
             setAssetsInLocal(storage)

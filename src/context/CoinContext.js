@@ -2,6 +2,7 @@ import {createContext, useEffect, useState} from 'react';
 import axios from 'axios'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+
 export const CoinProvider = createContext(null)
 
 // fetching current data for watch list
@@ -37,9 +38,7 @@ function CoinContext({children}) {
     const [loading, setLoading] = useState(false)
     const [watchlist, setWatchlist] = useState([])
 
-
     useEffect(() => {
-        // AsyncStorage.clear()
         dataWithPrice()
         getDataFromLocal()
 

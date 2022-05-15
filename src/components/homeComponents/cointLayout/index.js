@@ -1,4 +1,3 @@
-import {memo} from 'react'
 import {View, Text, Image, StyleSheet, Pressable} from "react-native";
 import tw from "tailwind-react-native-classnames";
 import {AntDesign} from '@expo/vector-icons';

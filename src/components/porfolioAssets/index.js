@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {FlatList, Text, View, StyleSheet, Pressable, RefreshControl} from "react-native";
 import tw from "tailwind-react-native-classnames";
 import {AntDesign} from "@expo/vector-icons";
@@ -6,16 +6,16 @@ import PortfolioAssetItem from "./PortfolioAssetItem";
 import {useNavigation} from "@react-navigation/native";
 import {useRecoilState, useRecoilValue} from "recoil";
 import {
-    allPortfolioAssetsState,
-    allRefreshDataFromAPIState, boughtAssetsFromLocalState
+    allPortfolioAssetsState, boughtAssetsFromAPIState, boughtAssetsFromLocalState
 } from "../../atoms/PortfolioAssets";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 function PortfolioAssetsList() {
     const navigation = useNavigation()
+    const updateValue = useRecoilValue(boughtAssetsFromAPIState)
+    const [loading,setLoading]=useState(false)
     const [assets, setAssets] = useRecoilState(allPortfolioAssetsState)
     const [assetsInLocal, setAssetsInLocal] = useRecoilState(boughtAssetsFromLocalState)
-    const refreshData = useRecoilValue(allRefreshDataFromAPIState)
 
     const currentBalance = assets.reduce((total, price) => {
         return total + (price.currentPrice * price.quantityBought)
@@ -27,20 +27,24 @@ function PortfolioAssetsList() {
     const color = percentageValue < 0 ? '#ea3943' : '#16c784' || 'white'
     const icon = percentageValue < 0 ? 'caretdown' : "caretup" || 'caretup'
 
+//TODO IMPLEMENT REFRESH ON PORTFOLIO
+
     const onRefresh = async () => {
         try {
-            await AsyncStorage.setItem('@portfolio-coins', JSON.stringify(refreshData))
-            setAssetsInLocal('local assets data',refreshData)
-            console.log(assetsInLocal)
-            console.log('the refresh data',refreshData)
+            setLoading(true)
+            await AsyncStorage.setItem('@portfolio-coins',JSON.stringify(updateValue))
+            setAssetsInLocal(updateValue)
+            setLoading(false)
         } catch (error) {
             console.log(error)
         }
     }
+
     return (
 
         <FlatList data={assets}
                   refreshControl={<RefreshControl
+                      loading={loading}
                       tintColor="white"
                       // onRefresh={onRefresh}
                   />}
