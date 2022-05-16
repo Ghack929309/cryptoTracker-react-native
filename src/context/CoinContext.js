@@ -38,6 +38,7 @@ function CoinContext({children}) {
     const [loading, setLoading] = useState(false)
     const [watchlist, setWatchlist] = useState([])
 
+
     useEffect(() => {
         // AsyncStorage.clear()
         dataWithPrice()
@@ -204,6 +205,17 @@ function CoinContext({children}) {
         }
 
     }
+    //fetch candle chart data
+    const candleChartData=async (data)=>{
+       try {
+           const {coin,interval}=data
+           const response= await axios.get(`https://api.coingecko.com/api/v3/coins/${coin}/ohlc?vs_currency=usd&days=${interval}`)
+           console.log(response.data)
+           return response.data
+       }catch (e) {
+           console.log('i made a mistake')
+       }
+    }
     return (
         <CoinProvider.Provider
             value={{
@@ -217,7 +229,8 @@ function CoinContext({children}) {
                 storeCoinIdToLocal,
                 removeCoinFromLocal,
                 fetchWatchlistData,
-                fetchAllCoin
+                fetchAllCoin,
+                candleChartData,
             }}>
             {children}
         </CoinProvider.Provider>);
