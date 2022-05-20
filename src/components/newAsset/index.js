@@ -12,17 +12,16 @@ import {
 import SearchableDropDown from "react-native-searchable-dropdown";
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { allCoinSelector, coinDetailAtom, coinDetailSelector } from "./atom";
+import { useRecoilState } from "recoil";
 import { boughtAssetsFromLocalAtom } from "../porfolioAssets/atoms/PortfolioAssets";
 import uuid from "react-native-uuid";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { fetchAllCoin, getDetailCoin } from "../../api/api";
 
 function NewAssetLayout() {
   const navigation = useNavigation();
-  const allCoin = useRecoilValue(allCoinSelector);
-  const assetInfo = useRecoilValue(coinDetailSelector);
-  const setId = useSetRecoilState(coinDetailAtom);
+  const [allCoin, setAllCoin] = useState([]);
+  const [assetInfo, setAssetInfo] = useState([]);
   const [selectedCoin, setSelectedCoin] = useState("");
   const [assetsInLocal, setAssetsInLocal] = useRecoilState(
     boughtAssetsFromLocalAtom
@@ -32,9 +31,28 @@ function NewAssetLayout() {
 
   useEffect(() => {
     if (selectedCoin !== "") {
-      setId(selectedCoin);
+      coinDetailData(selectedCoin);
     }
   }, [selectedCoin]);
+
+  useEffect(() => {
+    let loading = false;
+    if (!loading) {
+      fetchAllCoinData();
+    }
+    return () => (loading = true);
+  }, []);
+
+  async function fetchAllCoinData() {
+    const coins = await fetchAllCoin();
+    setAllCoin(coins);
+  }
+
+  const coinDetailData = async (id) => {
+    const detail = await getDetailCoin(id);
+    setAssetInfo(detail);
+  };
+
   //all functions are here
   const onAddNewAsset = async () => {
     const {
@@ -80,7 +98,7 @@ function NewAssetLayout() {
           style: styles.inputProps,
         }}
       />
-      {assetInfo && (
+      {assetInfo && selectedCoin !== "" && (
         <>
           <View style={[tw`flex-row items-start flex-1`, { marginTop: 50 }]}>
             <View

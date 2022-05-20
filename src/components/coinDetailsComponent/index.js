@@ -10,6 +10,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  ScrollView,
   View,
 } from "react-native";
 import tw from "tailwind-react-native-classnames";
@@ -175,42 +176,44 @@ function ChartSelector() {
           <Filter color={color} />
         </Suspense>
         {/*chart display base on toggle*/}
-        {toggle ? (
-          <StandardChart SIZE={SIZE} color={color} />
-        ) : (
-          <Suspense fallback={<ActivityIndicator size="large" />}>
-            <PremiumChart SIZE={SIZE} />
-          </Suspense>
-        )}
-        {/*    Converter section */}
+        <ScrollView style={tw`pb-8 flex-1`}>
+          {toggle ? (
+            <StandardChart SIZE={SIZE} color={color} />
+          ) : (
+            <Suspense fallback={<ActivityIndicator size="large" />}>
+              <PremiumChart SIZE={SIZE} />
+            </Suspense>
+          )}
+          {/*    Converter section */}
 
-        <View style={tw`flex-row `}>
-          <View style={tw`flex-1  flex-row `}>
-            <Text style={tw`text-white  self-center uppercase font-bold`}>
-              {symbol}
-            </Text>
-            <TextInput
-              style={styles.input}
-              placeholder={"Amount"}
-              value={coinValue}
-              onChangeText={(value) => changeCoin(value)}
-              keyBoardType="numeric"
-            />
+          <View style={tw`flex-row `}>
+            <View style={tw`flex-1  flex-row `}>
+              <Text style={tw`text-white  self-center uppercase font-bold`}>
+                {symbol}
+              </Text>
+              <TextInput
+                style={styles.input}
+                placeholder={"Amount"}
+                value={coinValue}
+                onChangeText={(value) => changeCoin(value)}
+                keyBoardType="numeric"
+              />
+            </View>
+            <View style={tw`flex-1 flex-row `}>
+              <Text style={tw`text-white self-center  font-bold`}>USD</Text>
+              <TextInput
+                style={styles.input}
+                placeholder={"Amount"}
+                value={currencyValue}
+                onChangeText={(value) => changeCurrency(value)}
+                keyBoardType="numeric"
+              />
+            </View>
           </View>
-          <View style={tw`flex-1 flex-row `}>
-            <Text style={tw`text-white self-center  font-bold`}>USD</Text>
-            <TextInput
-              style={styles.input}
-              placeholder={"Amount"}
-              value={currencyValue}
-              onChangeText={(value) => changeCurrency(value)}
-              keyBoardType="numeric"
-            />
-          </View>
-        </View>
+          {/*    statistic and new section*/}
+          <CoinNews id={id} />
+        </ScrollView>
       </LineChart.Provider>
-      {/*    statistic and new section*/}
-      <CoinNews id={id} />
     </KeyboardAvoidingView>
   );
 }

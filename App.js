@@ -11,7 +11,9 @@ export default function App() {
   let [fontsLoaded] = useFonts({
     Inter_900Black,
   });
-
+  //TODO refactor watchlist, migrate from recoil to react state
+  //TODO refactor portfolio do the same thing
+  //TODO refactor the coin detail, do the same
   if (!fontsLoaded) {
     return <ActivityIndicator size="large" />;
   }
