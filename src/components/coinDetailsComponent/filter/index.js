@@ -1,26 +1,32 @@
-import React, {memo, useState} from 'react';
+import React, {memo, useEffect, useState} from 'react';
 import {Text, View, StyleSheet, Pressable} from "react-native";
 import tw from "tailwind-react-native-classnames";
-import {useRecoilState} from "recoil";
-import {charIntervalState} from "../../../atoms/PortfolioAssets";
+import {useRecoilState, useSetRecoilState} from "recoil";
 import {MaterialIcons} from "@expo/vector-icons";
+import {charIntervalAtom, toggleAtom} from "../atom";
 
 
-function Filter({id, color, toggle, setToggle}) {
-    const [interval, setInterval] = useRecoilState(charIntervalState)
+function Filter({ color}) {
+    const  setInterval = useSetRecoilState(charIntervalAtom)
     const filter = ['24h', '7d', '30d', '1y', 'All']
     const [itemFilter, setItemFilter] = useState('24h')
+    const [toggle,setToggle]=useRecoilState(toggleAtom)
+
+    useEffect(() => {
+        setInterval(1)
+    }, [])
 
     const onFilter = (item) => {
         setItemFilter(item)
-        if (item === '24h') return setInterval({coin: id, interval: 1})
-        else if (item === '7d') return setInterval({coin: id, interval: 7})
-        else if (item === '30d') return setInterval({coin: id, interval: 30})
-        else if (item === '1y') return setInterval({coin: id, interval: 365})
-        else if (item === 'All') return setInterval({coin: id, interval: 'max'})
+        if (item === '24h') return setInterval(1)
+        else if (item === '7d') return setInterval(7)
+        else if (item === '30d') return setInterval(30)
+        else if (item === '1y') return setInterval(365)
+        else if (item === 'All') return setInterval( 'max')
     }
 
-    return (<View
+    return (
+        <View
         style={[tw`flex-row justify-between`, styles.container]}>
         {filter.map((item, id) => (
             <Pressable key={id} onPress={() => onFilter(item)}
