@@ -1,5 +1,4 @@
-import React, { useState, Suspense, useEffect, memo } from "react";
-import StandardChart from "./standartChart";
+import { useState, Suspense, useEffect, memo } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useRoute } from "@react-navigation/native";
 import {
@@ -14,10 +13,11 @@ import {
   View,
 } from "react-native";
 import tw from "tailwind-react-native-classnames";
-import PremiumChart from "./premiumChart";
-import Header from "./header";
 import { LineChart } from "react-native-wagmi-charts";
 import { AntDesign } from "@expo/vector-icons";
+import PremiumChart from "./premiumChart";
+import Header from "./header";
+import StandardChart from "./standartChart";
 import Filter from "./filter";
 import CoinNews from "./coinNews";
 import {
@@ -37,7 +37,8 @@ function ChartSelector() {
   const [coinValue, setCoinValue] = useState("1");
   const [currencyValue, setCurrencyValue] = useState("");
   const { width: SIZE } = Dimensions.get("window");
-
+  // TODO find a way to split the code so onComponentDidMount only the graph
+  //  as to be loaded
   useEffect(() => {
     let render = false;
 
@@ -55,13 +56,13 @@ function ChartSelector() {
   }, []);
 
   if (coinData === undefined || prices === undefined) {
-    return <ActivityIndicator size={"large"} />;
+    return <ActivityIndicator size="large" />;
   }
-  //fetching data for the specific coin
+  // fetching data for the specific coin
 
-  //fetch prices
-  //TODO IMPLEMENT SKELETON ON FILTER PRICES DATA
-  //premium chart fetch data
+  // fetch prices
+  // TODO IMPLEMENT SKELETON ON FILTER PRICES DATA
+  // premium chart fetch data
   const {
     image: { small },
     name,
@@ -82,10 +83,12 @@ function ChartSelector() {
   const color = percentage ? "#ea3943" : "#16c784" || "white";
   const icon = percentage ? "caretdown" : "caretup" || "caretup";
 
-  //show the graph info base on ui
+  // show the graph info base on ui
   const formatUI = ({ value }) => {
-    //everything here is needed
+    // everything here is needed
+
     "worklet";
+
     if (value === "") {
       if (value < 1) {
         return `$${current_price?.usd}`;
@@ -116,7 +119,7 @@ function ChartSelector() {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
       <LineChart.Provider data={points}>
-        {/*HEADER*/}
+        {/* HEADER */}
         <Header
           small={small}
           id={id}
@@ -129,19 +132,19 @@ function ChartSelector() {
         >
           <View>
             <Text style={tw`text-white`}>{name}</Text>
-            {/*display price base on chart point*/}
+            {/* display price base on chart point */}
 
-            {/*<LineChart.PriceText*/}
-            {/*  format={(value) => formatUI(value)}*/}
-            {/*  style={[*/}
-            {/*    tw`text-white`,*/}
-            {/*    {*/}
-            {/*      fontWeight: "600",*/}
-            {/*      fontSize: 30,*/}
-            {/*      letterSpacing: 1,*/}
-            {/*    },*/}
-            {/*  ]}*/}
-            {/*/>*/}
+            {/* <LineChart.PriceText */}
+            {/*  format={(value) => formatUI(value)} */}
+            {/*  style={[ */}
+            {/*    tw`text-white`, */}
+            {/*    { */}
+            {/*      fontWeight: "600", */}
+            {/*      fontSize: 30, */}
+            {/*      letterSpacing: 1, */}
+            {/*    }, */}
+            {/*  ]} */}
+            {/* /> */}
           </View>
           <View
             style={[
@@ -156,7 +159,7 @@ function ChartSelector() {
               name={icon}
               style={{ marginRight: 4 }}
               size={10}
-              color={"white"}
+              color="white"
             />
             <Text
               style={[
@@ -171,46 +174,47 @@ function ChartSelector() {
             </Text>
           </View>
         </View>
-        {/*filter section*/}
-        <Suspense fallback={<ActivityIndicator size="large" />}>
-          <Filter color={color} />
-        </Suspense>
-        {/*chart display base on toggle*/}
         <ScrollView style={tw`pb-8 flex-1`}>
+          {/* filter section */}
+          <Suspense fallback={<ActivityIndicator size="large" />}>
+            <Filter color={color} />
+          </Suspense>
+          {/* chart display base on toggle */}
+
           {toggle ? (
             <StandardChart SIZE={SIZE} color={color} />
           ) : (
-            <Suspense fallback={<ActivityIndicator size="large" />}>
+            <Suspense fallback={<ActivityIndicator size2="large" />}>
               <PremiumChart SIZE={SIZE} />
             </Suspense>
           )}
           {/*    Converter section */}
 
-          <View style={tw`flex-row `}>
-            <View style={tw`flex-1  flex-row `}>
-              <Text style={tw`text-white  self-center uppercase font-bold`}>
-                {symbol}
-              </Text>
-              <TextInput
-                style={styles.input}
-                placeholder={"Amount"}
-                value={coinValue}
-                onChangeText={(value) => changeCoin(value)}
-                keyBoardType="numeric"
-              />
-            </View>
-            <View style={tw`flex-1 flex-row `}>
-              <Text style={tw`text-white self-center  font-bold`}>USD</Text>
-              <TextInput
-                style={styles.input}
-                placeholder={"Amount"}
-                value={currencyValue}
-                onChangeText={(value) => changeCurrency(value)}
-                keyBoardType="numeric"
-              />
-            </View>
-          </View>
-          {/*    statistic and new section*/}
+          {/* <View style={tw`flex-row `}> */}
+          {/*  <View style={tw`flex-1  flex-row `}> */}
+          {/*    <Text style={tw`text-white  self-center uppercase font-bold`}> */}
+          {/*      {symbol} */}
+          {/*    </Text> */}
+          {/*    <TextInput */}
+          {/*      style={styles.input} */}
+          {/*      placeholder="Amount" */}
+          {/*      value={coinValue} */}
+          {/*      onChangeText={(value) => changeCoin(value)} */}
+          {/*      keyBoardType="numeric" */}
+          {/*    /> */}
+          {/*  </View> */}
+          {/*  <View style={tw`flex-1 flex-row `}> */}
+          {/*    <Text style={tw`text-white self-center  font-bold`}>USD</Text> */}
+          {/*    <TextInput */}
+          {/*      style={styles.input} */}
+          {/*      placeholder="Amount" */}
+          {/*      value={currencyValue} */}
+          {/*      onChangeText={(value) => changeCurrency(value)} */}
+          {/*      keyBoardType="numeric" */}
+          {/*    /> */}
+          {/*  </View> */}
+          {/* </View> */}
+          {/*    statistic and new section */}
           <CoinNews id={id} />
         </ScrollView>
       </LineChart.Provider>

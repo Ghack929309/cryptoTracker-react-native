@@ -8,30 +8,29 @@ import {
 } from "react-native";
 import tw from "tailwind-react-native-classnames";
 import { EvilIcons } from "@expo/vector-icons";
-import PortfolioAssetItem from "./PortfolioAssetItem";
 import { useNavigation } from "@react-navigation/native";
 import {
   useRecoilRefresher_UNSTABLE,
-  useRecoilState,
   useRecoilValue,
   useSetRecoilState,
 } from "recoil";
+import { SwipeListView } from "react-native-swipe-list-view";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   allPortfolioAssetsAtom,
   boughtAssetsFromAPISelector,
   boughtAssetsFromLocalAtom,
 } from "./atoms/PortfolioAssets";
-import { SwipeListView } from "react-native-swipe-list-view";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import PortfolioAssetItem from "./PortfolioAssetItem";
 import Header from "./Header";
 
 function PortfolioAssetsList() {
   const navigation = useNavigation();
-  let assets = useRecoilValue(allPortfolioAssetsAtom);
+  const assets = useRecoilValue(allPortfolioAssetsAtom);
   const onRefresh = useRecoilRefresher_UNSTABLE(boughtAssetsFromAPISelector);
   const setAssetsInLocal = useSetRecoilState(boughtAssetsFromLocalAtom);
 
-  //TODO IMPLEMENT REFRESH ON PORTFOLIO
+  // TODO IMPLEMENT REFRESH ON PORTFOLIO
 
   const closeRow = (rowMap, rowKey) => {
     if (rowMap[rowKey]) {

@@ -1,7 +1,7 @@
 import React from "react";
 import { FlatList, RefreshControl } from "react-native";
-import CoinLayout from "../homeComponents/cointLayout";
 import { useRecoilRefresher_UNSTABLE, useRecoilValue } from "recoil";
+import CoinLayout from "../homeComponents/cointLayout";
 import { watchlistAPSelector, watchlistCoinAtom } from "./atom";
 
 function WatchlistLayout() {

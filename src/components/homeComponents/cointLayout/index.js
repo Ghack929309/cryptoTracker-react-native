@@ -1,24 +1,23 @@
-import { Suspense } from "react";
+import { Suspense, memo } from "react";
 import { View, Text, Image, StyleSheet, Pressable } from "react-native";
 import tw from "tailwind-react-native-classnames";
 import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import { memo } from "react";
 import Chart from "../chart";
 
 function CoinLayout({ allData }) {
   const data = allData;
   const navigation = useNavigation();
 
-  //function to format marketcap
+  // function to format marketcap
   const beautifyInteger = (number) => {
     const trillion = 1e12;
     const billion = 1e9;
     const million = 1e6;
     const thousand = 1e3;
     if (number >= trillion) return `${(number / trillion).toFixed(3)} Tn`;
-    else if (number >= billion) return `${(number / billion).toFixed(3)} Bn`;
-    else if (number >= million) return `${(number / million).toFixed(3)} Mn`;
+    if (number >= billion) return `${(number / billion).toFixed(3)} Bn`;
+    if (number >= million) return `${(number / million).toFixed(3)} Mn`;
     return `${(number / thousand).toFixed(3)} K`;
   };
   const percentage = data?.price_change_percentage_24h < 0;
@@ -46,11 +45,11 @@ function CoinLayout({ allData }) {
         },
       ]}
     >
-      {/*image*/}
+      {/* image */}
       <View style={tw`justify-center`}>
         <Image style={tw`w-8 h-8`} source={{ uri: data?.image }} />
       </View>
-      {/*coin*/}
+      {/* coin */}
       <View style={tw`ml-3`}>
         <Text style={tw`font-bold text-white`}>{data?.name}</Text>
         <View style={[tw`flex-row items-center`, { marginTop: 4 }]}>
@@ -73,8 +72,8 @@ function CoinLayout({ allData }) {
             size={10}
             color={color}
           />
-          <Text style={{ color: color }}>
-            {data?.price_change_percentage_24h.toFixed(2)}%
+          <Text style={{ color }}>
+            {data?.price_change_percentage_24h?.toFixed(2)}%
           </Text>
         </View>
       </View>
@@ -84,7 +83,7 @@ function CoinLayout({ allData }) {
         <Chart id={data.id} SIZE={SIZE} chartColor={chartColor} />
       </Suspense>
 
-      {/*    market cap*/}
+      {/*    market cap */}
       <View style={tw`ml-auto flex-col self-center items-end`}>
         <Text style={[tw`text-white  font-bold`, { marginBottom: 2 }]}>
           {data?.current_price}

@@ -16,7 +16,7 @@ function Header({ small, symbol, market_cap_rank, id }) {
   const removeFromLocal = useRecoilValue(removeIdFromWatchlistSelector(id));
   const [storage, setStorage] = useRecoilState(watchlistLocalAtom);
   const watched = storage?.some((coinId) => coinId === id);
-  //if already stored remove else store it
+  // if already stored remove else store it
   const watchlistHandler = () => {
     if (watched) {
       return setStorage(removeFromLocal);

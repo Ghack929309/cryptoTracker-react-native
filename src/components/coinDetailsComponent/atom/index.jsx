@@ -1,7 +1,7 @@
 import { atom, atomFamily, selector, selectorFamily } from "recoil";
 import { candleChartData, fetchPrices, getDetailCoin } from "../../../api/api";
 
-//***************************** single coin detail ************************************
+//* **************************** single coin detail ************************************
 export const fetchCoinDetailSelector = selector({
   key: "fetchCoinDetailSelector",
   get: async ({ get }) => {
@@ -20,9 +20,9 @@ export const getCoinAtom = atom({
   default: "",
 });
 
-//***************************** single coin detail ************************************
+//* **************************** single coin detail ************************************
 
-//*************************************** chartData ********************************
+//* ************************************** chartData ********************************
 export const chartDataFetchSelector = selector({
   key: "chartDataFetchSelector",
   get: async ({ get }) => {
@@ -63,4 +63,4 @@ export const candleChartDataAtom = atom({
   key: "pricesDataAtom",
   default: fetchPremiumChartDataSelector,
 });
-//*************************************** chartData ********************************
+//* ************************************** chartData ********************************
